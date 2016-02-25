@@ -88,15 +88,15 @@
 	</head>
 	<body>
 		<table>
-		<tr><td>Exp</td><td><textarea id="exp"><a href="javascr:{chr}ipt:alert(1)">:{i}</a><br/></textarea></td></tr>
-		<tr><td>Callback</td><td><textarea id="callback" placeholder="coffeescript">$$ x.innerHTML for x in document.links when x.href=="x"</textarea></td></tr>
+		<tr><td>Exp</td><td><textarea id="exp"><a href=":{chr}javascript:alert(1)">:{i}</a><br/></textarea></td></tr>
+		<tr><td>Callback</td><td><textarea id="callback" placeholder="coffeescript">$$ x.innerHTML for x in document.links when x.protocol=="javascript:"</textarea></td></tr>
 		<tr><td>Start char</td><td><input id="start_char" type="text" value="0" size="5"/></td></tr>
 		<tr><td>End char</td><td><input id="end_char" type="text" value="65535" size="5"/></td></tr>
 		<tr><td>Encode</td>
 			<td>
 				<select id="encode">
-					<option selected="selected">None</option>
-					<option>Hex</option>
+					<option>None</option>
+					<option selected="selected">Hex</option>
 					<option>Decimal</option>
 					<option>Escape</option>
 				</select>
