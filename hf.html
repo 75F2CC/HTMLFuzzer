@@ -1,0 +1,114 @@
+<!doctype html>
+<!-- create by sogili -->
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>f~</title>
+		<style type="text/css">
+		body{
+			font: 15px/162% Arial,Helvetica,sans-serif;
+		}
+		input[type='text'],textarea,iframe{
+			border-style: solid;
+			border-color: #d2d3d4;
+			border-width:1px;
+		}
+		#html_result{
+			width:30%;
+			height:300px;
+		}
+		#html_result{
+			width:40%;
+			height:300px;
+		}
+		#callback_result{
+			width:40%;
+			height:296px;
+		}
+		#callback{
+			width:400px;
+			height:60px;
+		}
+		#exp{
+			width:400px;
+			height:60px;
+		}
+		#count{
+			color:red;
+		}
+		button{
+			background-color:#151515;
+			color:white;
+		}
+		</style>
+		<script type="text/javascript" src="jquery-1.4.4.js"></script>
+		<script type="text/javascript" src="coffee-script.js"></script>
+		<!--[if lte IE 7]>
+		<script type="text/javascript" src="json2.js"></script>
+		<![endif]-->
+		<script type="text/coffeescript">
+		html_result = document.getElementById('html_result').contentWindow
+		callback_result = $('#callback_result')
+		toHexHTML = (str)->
+			val = str.charCodeAt(0).toString(16)
+			val.length<2 and (chr='&#0'+val+';') or (chr='&#'+val+';')
+			chr
+			
+		toDecimalHTML = (str)->
+			'&#'+ str.charCodeAt(0)
+			
+		fuzzer = (exp,start,end,encode,callback)->
+			result = []
+			convert = 
+				switch(encode)
+					when 'Hex' then toHexHTML
+					when 'Decimal' then toDecimalHTML
+					when 'Escape' then escape
+					else (x)->x
+			html = ''
+			html+=exp.replace(/:{chr}/g,convert(String.fromCharCode(i))).replace(/:{i}/g,i) for i in [start..end]
+			html_result.document.body.innerHTML=html
+			html_result.execScript('0') if $.browser.msie
+			html_result.$$=(x)->result.push(x)
+			try
+				html_result.eval(CoffeeScript.compile(callback))
+			catch e
+				alert e.message
+			callback_result.val(result)
+		$ ->
+			$('#go').click ->
+				exp = $('#exp').val()
+				start = parseInt $('#start_char').val(),10
+				end = parseInt $('#end_char').val(),10
+				urlencode = parseInt $('input[name=urlencode]:checked').val(),10
+				encode =  $('#encode option:selected')[0].text
+				callback = $('#callback').val()
+				fuzzer(exp,start,end,encode,callback)
+		</script>
+	</head>
+	<body>
+		<table>
+		<tr><td>Exp</td><td><textarea id="exp"><a href="javascr:{chr}ipt:alert(1)">:{i}</a><br/></textarea></td></tr>
+		<tr><td>Callback</td><td><textarea id="callback" placeholder="coffeescript">$$ x.innerHTML for x in document.links when x.href=="x"</textarea></td></tr>
+		<tr><td>Start char</td><td><input id="start_char" type="text" value="0" size="5"/></td></tr>
+		<tr><td>End char</td><td><input id="end_char" type="text" value="65535" size="5"/></td></tr>
+		<tr><td>Encode</td>
+			<td>
+				<select id="encode">
+					<option selected="selected">None</option>
+					<option>Hex</option>
+					<option>Decimal</option>
+					<option>Escape</option>
+				</select>
+			</td>
+		</tr>
+		</table>
+		<div>
+			<iframe id="html_result" frameborder=0 src="about:blank"></iframe>
+			<textarea id="callback_result" placeholder="callback result" readOnly></textarea>
+		</div>
+		<div>
+			<button id="go">Fuzzing!</button>
+		</div>
+	</body>
+</html>
