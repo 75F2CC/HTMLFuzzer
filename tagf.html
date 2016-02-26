@@ -55,5 +55,10 @@
 		</table>
 		<button onclick="fuzz()">Fuzzing!</button>
 		<div id="testbox"></div>
+		<script type="text/javascript">
+			if(location.hash){
+				$('#exp').val(location.hash)
+			}
+		</script>
 	</body>
 </html>
