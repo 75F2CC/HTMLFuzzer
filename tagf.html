@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Tagfuck fuzzer</title>
+		<style type="text/css">
+			body{
+				font: 15px/162% Arial,Helvetica,sans-serif;
+			}
+			input[type='text'],textarea{
+				border-style: solid;
+				border-color: #d2d3d4
+			}
+			#result{
+				width:60%;
+				height:300px;
+			}
+			#exp{
+				width:1000px;
+				height:60px;
+			}
+			#count{
+				color:red;
+			}
+			button{
+				background-color:#151515;
+				color:white;
+			}
+		</style>
+		<script type="text/javascript">
+			var tags = ["a","abbr","acronym","address","applet","area","article","aside","audio","audioscope","b","base","basefont","bdi","bdo","bgsound","big","blackface","blink","blockquote","body","bq","br","button","canvas","caption","center","cite","code","col","colgroup","command","comment","content","custom","datagrid","datalist","datatemplate","dd","del","dir","div","dfn","dl","dt","em","embed","event-source","eventsource","fieldset","figcaption","figure","font","footer","form","frame","frameset","h1","h2","h3","h4","h5","h6","head","hgroup","hr","html","i","iframe","ilayer","img","image","input","ins","intent","isindex","kbd","keygen","label","legend","li","limittext","link","listing","map","mark","marquee","media","menu","meta","multicol","nav","nextid","nobr","noembed","noframes","noscript","nolayer","object","ol","optgroup","option","output","p","param","pre","q","rb","rbc","rp","rtc","rt","ruby","s","samp","script","section","select","shadow","sidebar","small","source","spacer","span","strike","strong","style","sub","summary","sup","table","tbody","td","textarea","tfoot","th","thead","time","title","tr","track","tt","u","ul","var","wbr","xml","xmp","video","svg","math","vmlframe"]
+			function fuzz(){
+				var exp = document.getElementById('exp').value;
+				var testbox = document.getElementById('testbox');
+				testbox.innerHTML='';
+				for(var i=0,t;t=tags[i];i++){
+					var iframe = document.createElement('iframe');
+					iframe.src='about:blank';
+					testbox.appendChild(iframe);
+					iframe.contentWindow.document.write(exp.replace(/:{v}/g,t));
+				}	
+			}
+			//for(var i=0;i<tags.length;i++){console.log('<'+tags[i]+' class="hehe">xx</'+tags[i]+'>');}
+		</script>
+	</head>
+	<body>
+		<table>
+			<tbody>
+				<tr><td>Exp</td><td><textarea style="height:300px;" id="exp" autofocus><:{v} onfocus=alert(":{v}") autofocus></textarea></td></tr>
+				<!--
+				<tr><td>Start char</td><td><input id="start_char" type="text" value="0" size="5"></td></tr>
+				<tr><td>End char</td><td><input id="end_char" type="text" value="100" size="5"></td></tr>
+				-->
+			</tbody>
+		</table>
+		<button onclick="fuzz()">Fuzzing!</button>
+		<div id="testbox"></div>
+	</body>
+</html>
