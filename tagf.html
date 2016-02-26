@@ -57,7 +57,8 @@
 		<div id="testbox"></div>
 		<script type="text/javascript">
 			if(location.hash){
-				document.getElementById('exp').value=location.hash;
+				location.hash='';
+				document.getElementById('exp').value=location.hash.slice(1);
 			}
 		</script>
 	</body>
